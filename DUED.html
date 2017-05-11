@@ -8,6 +8,8 @@
   	<p>
   		Run each benchmark 
   		<input id="iters_input" type="text" maxlength="6" size="6"/> times.
+      Iteration multiplier
+  		<input id="iter_mult_input" type="text" maxlength="6" size="6"/> times.
   	</p>
   	<button id='start_btn' onclick="runBenchmarks()">Run Benchmarks</button>
   	<div id='output'></div>
@@ -18,7 +20,8 @@
       var parent = container.appendChild(document.createElement('div'));
 
       var startBtn = document.getElementById('start_btn');
-      var itersInput = document.getElementById('iters_input')
+      var itersInput = document.getElementById('iters_input');
+      var itersMultInput = document.getElementById('iter_mult_input');
 
       // Benchmarks
       var appendNChildren = function (n) {
@@ -201,6 +204,75 @@
           preAppend : false
         },
         {
+          task : 'Prepend 10000 children (insertBefore(child, firstChild))',
+          nChildren : 10000,
+          cb : prependNChildren,
+          preAppend : false
+        },
+        {
+          task : 'InsertBefore 10000 children (insertBefore(child, child[i]))',
+          nChildren : 10000,
+          cb : insertBeforeNChildren,
+          preAppend : false
+        },
+        {
+          task : 'Replace 10000 children (replaceChild(child, child[i]))',
+          nChildren : 10000,
+          cb : replaceNChildren,
+          preAppend : false
+        },
+
+        // With parent nodes included in a Range
+        {
+          task : 'Append 10000 children (appendChild) - parent node inside selection range.',
+          nChildren : 10000,
+          cb : appendNChildren,
+          preAppend : false,
+          parentNodeInRange: true
+        },
+        {
+          task : 'Remove 10000 children from front (removeChild) - parent node inside selection range',
+          nChildren : 10000,
+          cb : removeNChildrenFront,
+          preAppend : false,
+          parentNodeInRange: true
+        },
+        {
+          task : 'Remove 10000 children from back (removeChild) - parent node inside selection range',
+          nChildren : 10000,
+          cb : removeNChildrenBack,
+          preAppend : false,
+          parentNodeInRange: true
+        },
+        {
+          task : 'Remove 10000 children randomly (removeChild) - parent node inside selection range',
+          nChildren : 10000,
+          cb : removeNChildrenRandom,
+          preAppend : false,
+          parentNodeInRange: true
+        },
+        {
+          task : 'Prepend 10000 children (insertBefore(child, firstChild)) - parent node inside selection range',
+          nChildren : 10000,
+          cb : prependNChildren,
+          preAppend : false
+        },
+        {
+          task : 'InsertBefore 10000 children (insertBefore(child, child[i])) - parent node inside selection range',
+          nChildren : 10000,
+          cb : insertBeforeNChildren,
+          preAppend : false,
+          parentNodeInRange: true
+        },
+        {
+          task : 'Replace 10000 children (replaceChild(child, child[i])) - parent node inside selection range',
+          nChildren : 10000,
+          cb : replaceNChildren,
+          preAppend : false,
+          parentNodeInRange: true
+        },
+
+        {
           task : 'Iterate forwards through 100000 children (nextSibling)',
           nChildren : 100000,
           cb : iterateThroughChildrenForwards,
@@ -235,24 +307,6 @@
           nChildren : 100000,
           cb : nodeListBackwards,
           preAppend : true
-        },
-        {
-          task : 'Prepend 10000 children (insertBefore(child, firstChild))',
-          nChildren : 10000,
-          cb : prependNChildren,
-          preAppend : false
-        },
-        {
-          task : 'InsertBefore 10000 children (insertBefore(child, child[i]))',
-          nChildren : 10000,
-          cb : insertBeforeNChildren,
-          preAppend : false
-        },
-        {
-          task : 'Replace 10000 children (replaceChild(child, child[i]))',
-          nChildren : 10000,
-          cb : replaceNChildren,
-          preAppend : false
         }
       ];
 
@@ -262,6 +316,7 @@
           validInput();
         });
         itersInput.value = '1';
+        itersMultInput.value = '1';
         // Create ui elements for each benchmark
         for (var i = 0; i < DOM_API_BENCHMARKS.length; i++) {
           var bm = DOM_API_BENCHMARKS[i];
@@ -286,7 +341,7 @@
 
       // Make sure iterations input is a positive integer
       var validInput = function() {
-        if (/[^0-9]/g.test(itersInput.value)) {
+        if (/[^0-9]/g.test(itersInput.value) && /[^0-9]/g.test(itersMultInput.value)) {
           startBtn.disabled = true;
         } else {
           startBtn.disabled = false;
@@ -296,20 +351,33 @@
       // Run each enabled benchmark # of iterations times and take an average of the time.
       var runBenchmarks = function() {
         var iterations = parseInt(itersInput.value);
+        var iterationMultiplier = parseInt(itersMultInput.value);
         var cumulativeTime = 0;
         var outputWrapper = document.getElementById('output');
         removeAllChildren(outputWrapper); // Clear previous output
 
         for (var i = 0; i < DOM_API_BENCHMARKS.length; i++) {
           var bm = DOM_API_BENCHMARKS[i];
+          var range = document.createRange();
+          var numChildren = bm.nChildren * iterationMultiplier;
+
           if (!bm.run) continue;
+          // clear selections
+          var selection = window.getSelection();
+          selection.removeAllRanges();
+
           // Remove any children left from previous benchmarks.
           removeAllChildren(container);
           parent = container.appendChild(document.createElement('div'));
 
+          if (bm.parentNodeInRange) {
+            range.selectNodeContents(parent);
+            selection.addRange(range);
+          }
+
           // Append children for benchmark if needed
           if (bm.preAppend) {
-            for (var j = 0; j < bm.nChildren; j++) {
+            for (var j = 0; j < numChildren; j++) {
               parent.appendChild(document.createElement('div'));
             }
           }
@@ -317,7 +385,7 @@
           // Run benchmarks
           var totalTime = 0;
           for (var t = 0; t < iterations; t++) {
-            var time = bm.cb(bm.nChildren);
+            var time = bm.cb(numChildren);
             totalTime += time;
             cumulativeTime += time;
           }
