@@ -22,6 +22,7 @@
       var startBtn = document.getElementById('start_btn');
       var itersInput = document.getElementById('iters_input');
       var itersMultInput = document.getElementById('iter_mult_input');
+      var secondContainer = document.body.appendChild(document.createElement('div'));
 
       // Benchmarks
       var appendNChildren = function (n) {
@@ -76,6 +77,28 @@
         var t2 = performance.now();
         return t2 - t1;
       };
+
+      var removeNChildrenAlternatingBackFront = function(n) {
+        var children = [];
+        for (var i = 0; i < n; i++) {
+          var child = document.createElement('div');
+          parent.appendChild(child);
+          children.push(child);
+        }
+
+        var t1 = performance.now();
+        for (var i = 0, j = children.length - 1; i <= j;) {
+          parent.removeChild(children[i++]);
+          if (i > j) {
+            break;
+          }
+          parent.removeChild(children[j--]);
+        }
+
+        var t2 = performance.now();
+        return t2 - t1;
+      };
+
 
       var iterateThroughChildrenForwards = function(n) {
         var t1 = performance.now();
@@ -204,6 +227,12 @@
           preAppend : false
         },
         {
+          task : 'Remove 10000 children alternating back front (removeChild)',
+          nChildren : 10000,
+          cb : removeNChildrenAlternatingBackFront ,
+          preAppend : false
+        },
+        {
           task : 'Prepend 10000 children (insertBefore(child, firstChild))',
           nChildren : 10000,
           cb : prependNChildren,
@@ -248,6 +277,13 @@
           task : 'Remove 10000 children randomly (removeChild) - parent node inside selection range',
           nChildren : 10000,
           cb : removeNChildrenRandom,
+          preAppend : false,
+          parentNodeInRange: true
+        },
+        {
+          task : 'Remove 10000 children alternating back front (removeChild) - parent node inside selection range',
+          nChildren : 10000,
+          cb : removeNChildrenAlternatingBackFront,
           preAppend : false,
           parentNodeInRange: true
         },
@@ -358,7 +394,7 @@
 
         for (var i = 0; i < DOM_API_BENCHMARKS.length; i++) {
           var bm = DOM_API_BENCHMARKS[i];
-          var range = document.createRange();
+          var range;
           var numChildren = bm.nChildren * iterationMultiplier;
 
           if (!bm.run) continue;
@@ -371,6 +407,7 @@
           parent = container.appendChild(document.createElement('div'));
 
           if (bm.parentNodeInRange) {
+            range = document.createRange();
             range.selectNodeContents(parent);
             selection.addRange(range);
           }
@@ -388,6 +425,9 @@
             var time = bm.cb(numChildren);
             totalTime += time;
             cumulativeTime += time;
+          }
+          if (range) {
+            range = null;
           }
           totalTime = totalTime / iterations;
 
