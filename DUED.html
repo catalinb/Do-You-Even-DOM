@@ -24,6 +24,10 @@
       var itersMultInput = document.getElementById('iter_mult_input');
       var secondContainer = document.body.appendChild(document.createElement('div'));
 
+      var iframe = document.createElement('iframe');
+      secondContainer.appendChild(iframe);
+      secondContainer.style.display = "none";
+
       // Benchmarks
       var appendNChildren = function (n) {
         var t1 = performance.now();
@@ -427,6 +431,9 @@
             cumulativeTime += time;
           }
           if (range) {
+            var selection = window.getSelection();
+            selection.removeAllRanges();
+            range.selectNodeContents(iframe.contentDocument.body);
             range = null;
           }
           totalTime = totalTime / iterations;
