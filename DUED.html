@@ -86,26 +86,42 @@
       };
 
       var removeNChildrenAlternatingBackFront = function(n) {
-        var children = [];
         for (var i = 0; i < n; i++) {
           var child = document.createElement('div');
           parent.appendChild(child);
-          children.push(child);
         }
 
+        var sign = 1;
         var t1 = performance.now();
-        for (var i = 0, j = children.length - 1; i <= j;) {
-          parent.removeChild(children[i++]);
-          if (i > j) {
-            break;
+        for (var i = 0; i < n; i++) {
+          if (sign > 0) {
+            parent.removeChild(parent.firstChild);
+            sign = -sign;
+          } else {
+            parent.removeChild(parent.lastChild);
+            sign = -sign;
           }
-          parent.removeChild(children[j--]);
         }
 
         var t2 = performance.now();
         return t2 - t1;
       };
 
+      var insertNChildrenAlternatingBackFront = function(n) {
+        var sign = 1;
+        var t1 = performance.now();
+        for (var i = 0; i < n; i++) {
+          if (sign < 0) {
+            parent.insertBefore(document.createElement('div'), parent.firstChild);
+            sign = -sign;
+          } else {
+            parent.insertBefore(document.createElement('div'), parent.lastChild);
+            sign = -sign;
+          }
+        }
+        var t2 = performance.now();
+        return t2 - t1;
+      };
 
       var iterateThroughChildrenForwards = function(n) {
         var t1 = performance.now();
@@ -174,6 +190,29 @@
         var t1 = performance.now();
         for (var i = 0; i < n; i++) {
           parent.insertBefore(document.createElement('div'), parent.firstChild);
+        }
+        var t2 = performance.now();
+        return t2 - t1;
+      }
+
+      var insertBeforeNChildrenChosenRandomly = function(n) {
+        var children = [];
+        for (var i = 0; i < n; i++) {
+          parent.appendChild(document.createElement('div'));
+          children.push(parent.lastChild);
+        }
+
+        // Shuffle list of indices
+        for (var i = 0; i < 100 * children.length; i++) {
+          var r = Math.floor(Math.random() * children.length);
+          var tmp = children[0];
+          children[0] = children[r];
+          children[r] = tmp;
+        }
+
+        var t1 = performance.now();
+        for (var i = 0; i < n; i++) {
+          parent.insertBefore(document.createElement('div'), children[i]);
         }
         var t2 = performance.now();
         return t2 - t1;
@@ -252,6 +291,20 @@
           preAppend : false
         },
         {
+          task : 'Alternate insertBefore(firstChild/lastChild) 10000 children.',
+          nChildren : 10000,
+          cb : insertNChildrenAlternatingBackFront,
+          preAppend : false,
+          parentNodeInRange: false
+        },
+        {
+            task : 'InsertBefore 10000 children before random child (insertBefore(child, child[random child]))',
+          nChildren : 10000,
+          cb : insertBeforeNChildrenChosenRandomly,
+          preAppend : false,
+          parentNodeInRange: false
+        },
+        {
           task : 'Replace 10000 children (replaceChild(child, child[i]))',
           nChildren : 10000,
           cb : replaceNChildren,
@@ -307,6 +360,21 @@
           preAppend : false,
           parentNodeInRange: true
         },
+        {
+          task : 'Alternate insertBefore(firstChild/lastChild) 10000 children. - parent node inside selection range',
+          nChildren : 10000,
+          cb : insertNChildrenAlternatingBackFront,
+          preAppend : false,
+          parentNodeInRange: true
+        },
+        {
+            task : 'InsertBefore 10000 children before random child (insertBefore(child, child[random child])) - parent node inside selection range',
+          nChildren : 10000,
+          cb : insertBeforeNChildrenChosenRandomly,
+          preAppend : false,
+          parentNodeInRange: true
+        },
+
         {
           task : 'Replace 10000 children (replaceChild(child, child[i])) - parent node inside selection range',
           nChildren : 10000,
