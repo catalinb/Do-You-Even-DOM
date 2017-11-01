@@ -252,7 +252,7 @@
 
 
       var setStartBeforeRange = function (n) {
-          var range = document.createRange();
+          var range = window.get;
           var divs = document.getElementById('range').childNodes;
 
           var t1 = performance.now();
@@ -264,14 +264,48 @@
       };
 
 
+      function getRange(node) {
+         return window.getSelection().getRangeAt(0) != null ?
+             window.getSelection().getRangeAt(0) :
+             window.getSelection().createRange().setStartBefore(node);
+      }
+
+      var comparePoint = function (n) {
+          //var range = document.createRange();
+          var divs = document.getElementById('range').childNodes;
+          var parentDivs = parent.childNodes;
+          var range = getRange(divs[0]);
+
+          var value;
+          var t1 = performance.now();
+          for (var i = 0; i < divs.length; i++) {
+              value = range.comparePoint(divs[i+1],1);
+              console.log("value" + value);
+              value = range.comparePoint(parentDivs[i+1],1);
+              console.log("value" + value)
+          }
+          var t2 = performance.now();
+          return t2 - t1;
+      };
+
+
+
       var DOM_API_BENCHMARKS = [
 
         {
           task : 'Set Start Before Range on 10000 children',
           nChildren : 10000,
           cb : setStartBeforeRange,
-          preAppend : true
+          preAppend : true,
+          parentNodeInRange: true
         },
+        {
+          task : 'Compare Point Range on 10000 children',
+          nChildren : 10000,
+          cb : comparePoint,
+          preAppend : true,
+          parentNodeInRange: true
+        }/*,
         {
           task : 'Append 10000 children (appendChild)',
           nChildren : 10000,
@@ -442,7 +476,7 @@
           nChildren : 100000,
           cb : nodeListBackwards,
           preAppend : true
-        }
+        }*/
       ];
 
       // Create a basic UI to enable/disable benchmarks and set # of iterations
