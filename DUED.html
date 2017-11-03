@@ -278,13 +278,72 @@
 
           var value;
           var t1 = performance.now();
-          for (var i = 0; i < divs.length; i++) {
-              value = range.comparePoint(divs[i+1],1);
+          for (var i = 0; i < divs.length - 1; i++) {
+              value = range.comparePoint(divs[i+1], 0);
               console.log("value" + value);
-              value = range.comparePoint(parentDivs[i+1],1);
+              value = range.comparePoint(parentDivs[i+1], 0);
               console.log("value" + value)
           }
           var t2 = performance.now();
+          return t2 - t1;
+      };
+
+
+      var surroundContents = function (n) {
+
+          var divs = document.getElementById('range').childNodes;
+          var range = window.getRange(divs[0]);
+
+          for (var i = 0; i < divs.length; i++) {
+              divs[i].appendChild(document.createElement('p'));
+          }
+
+          var t1 = performance.now();
+          for (var i = 0; i < divs.length; i++) {
+              range.surroundContents(divs[i].children[0]);
+          }
+          var t2 = performance.now();
+          return t2 - t1;
+      };
+
+      var cloneContents = function (n) {
+          var range = window.get;
+          var divs = document.getElementById('range').childNodes;
+          var clones = [];
+          var clone;
+
+          var t1 = performance.now();
+          for (var i = 0; i < divs.length; i++) {
+              clone = range.cloneContents(divs[i]);
+              clones.push(clone);
+          }
+          var t2 = performance.now();
+
+          for (var i = 0; i < clones.length; i++) {
+              thirdContainer.appendChild(clones[i]);
+          }
+
+          return t2 - t1;
+      };
+
+
+      var cloneRange = function (n) {
+          var range = window.get;
+          var divs = document.getElementById('range').childNodes;
+          var ranges = [];
+          var clone;
+
+          var t1 = performance.now();
+          for (var i = 0; i < divs.length; i++) {
+              clone = range.cloneRange(divs[i]);
+              clones.push(clone);
+          }
+          var t2 = performance.now();
+
+          for (var i = 0; i < clones.length; i++) {
+              thirdContainer.appendChild(clones[i]);
+          }
+
           return t2 - t1;
       };
 
@@ -303,6 +362,20 @@
           task : 'Compare Point Range on 10000 children',
           nChildren : 10000,
           cb : comparePoint,
+          preAppend : true,
+          parentNodeInRange: true
+        },
+        {
+          task : 'Surround Contents Range on 10000 children',
+          nChildren : 10000,
+          cb : surroundContents,
+          preAppend : true,
+          parentNodeInRange: true
+        },
+        {
+          task : 'Clone Contents Range on 10000 children',
+          nChildren : 10000,
+          cb : cloneContents,
           preAppend : true,
           parentNodeInRange: true
         }/*,
