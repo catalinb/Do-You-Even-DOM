@@ -306,7 +306,355 @@
           return t2 - t1;
       };
 
+      function addRanges(divs) {
+
+          for (var i = 0; i < divs.length; i++) {
+              var r = new Range;
+              r.selectNode(divs[i]);
+          }
+
+      }
+
       var cloneContents = function (n) {
+          var range = window.getRange(divs[0]);
+          var divs = document.getElementById('range').childNodes;
+          var clones = [];
+          var clone;
+
+          for (var i = 0; i < divs.length; i++) {
+              divs[i].appendChild(document.createElement('p'));
+          }
+
+          var t1 = performance.now();
+          for (var i = 0; i < divs.length; i++) {
+              clone = range.cloneContents(divs[i]);
+              clones.push(clone);
+          }
+          var t2 = performance.now();
+
+          for (var i = 0; i < clones.length; i++) {
+              divs[i].appendChild(clones[i]);
+          }
+
+          return t2 - t1;
+      };
+
+      var cloneRange = function (n) {
+          var range;
+          var divs = document.getElementById('range').childNodes;
+          var ranges = [];
+          var r;
+
+          addRanges(divs);
+
+          var t1 = performance.now();
+          for (var i = 0; i < divs.length; i++) {
+              range = getRange(divs[i])
+              r = range.cloneRange(divs[i]);
+              ranges.push(r);
+          }
+          var t2 = performance.now();
+
+          console.log('ranges = ' + ranges);
+          return t2 - t1;
+      };
+
+
+      var createContextualFragment = function (n) {
+          var divs = document.getElementById('range').childNodes;
+          var fragments = [];
+          var range;
+          var tagString = "<div>I am a Contextual Fragment</div>";
+
+          addRanges(divs);
+
+          var t1 = performance.now();
+          for (var i = 0; i < divs.length; i++) {
+              range = getRange(divs[i])
+              fragments.push(range.createContextualFragment(tagString));
+          }
+          var t2 = performance.now();
+
+          for (var i = 0; i < fragments.length; i++) {
+              divs[i].appendChild(fragments[i]);
+          }
+
+          return t2 - t1;
+      };
+
+      var deleteContents = function (n) {
+          var range;
+          var divs = document.getElementById('range').childNodes;
+
+          for (var i = 0; i < divs.length; i++) {
+              divs[i].appendChild(document.createElement('p'));
+          }
+
+          addRanges(divs);
+
+          var t1 = performance.now();
+          for (var i = 0; i < divs.length; i++) {
+              range = getRange(divs[i])
+              range.deleteContents();
+          }
+          var t2 = performance.now();
+
+          return t2 - t1;
+      };
+
+      var detach = function (n) {
+          var range;
+          var divs = document.getElementById('range').childNodes;
+
+          addRanges(divs);
+
+          var t1 = performance.now();
+          for (var i = 0; i < divs.length; i++) {
+              range = getRange(divs[i])
+              range.detach();
+          }
+          var t2 = performance.now();
+
+          return t2 - t1;
+      };
+
+      var extractContents = function (n) {
+          var divs = document.getElementById('range').childNodes;
+          var fragments = [];
+          var range;
+
+          addRanges(divs);
+
+          var t1 = performance.now();
+          for (var i = 0; i < divs.length; i++) {
+              range = getRange(divs[i])
+              fragments.push(range.extractContents());
+          }
+          var t2 = performance.now();
+
+          for (var i = 0; i < fragments.length; i++) {
+              divs[i].appendChild(fragments[i]);
+          }
+
+          return t2 - t1;
+      };
+
+      var getClientRects = function (n) {
+          var divs = document.getElementById('range').childNodes;
+          var clientRects = [];
+          var range;
+
+          addRanges(divs);
+
+          var t1 = performance.now();
+          for (var i = 0; i < divs.length; i++) {
+              range = getRange(divs[i])
+              clientRects.push(range.getClientRects);
+          }
+          var t2 = performance.now();
+
+          console.log('clientRects = ' + clientRects);
+
+          return t2 - t1;
+      };
+
+      var getBoundingClientRect = function (n) {
+          var range;
+          var divs = document.getElementById('range').childNodes;
+          var boundingClientRects = [];
+
+          addRanges(divs);
+
+          var t1 = performance.now();
+          for (var i = 0; i < divs.length; i++) {
+              range = getRange(divs[i])
+              boundingClientRects.push(range.getBoundingClientRect);
+          }
+          var t2 = performance.now();
+
+          console.log('boundingClientRects = ' + boundingClientRects);
+
+          return t2 - t1;
+      };
+
+
+      var insertNode = function (n) {
+          var divs = document.getElementById('range').childNodes;
+          var range;
+          var node = document.createElement('p');
+
+          addRanges(divs);
+
+          var t1 = performance.now();
+          for (var i = 0; i < divs.length; i++) {
+              range = getRange(divs[i])
+              range.insertNode(node);
+          }
+          var t2 = performance.now();
+
+          return t2 - t1;
+      };
+
+      var intersectsNode = function (n) {
+          var divs = document.getElementById('range').childNodes;
+          var range;
+          var intersected = [];
+
+          for (var i = 0; i < divs.length; i++) {
+              divs[i].appendChild(document.createElement('p'));
+          }
+
+          addRanges(divs);
+
+          var t1 = performance.now();
+          for (var i = 0; i < divs.length; i++) {
+              range = getRange(divs[i])
+              intersected.push(range.intersectsNode(divs[i].childNodes[0]));
+          }
+          var t2 = performance.now();
+
+          console.log('intersected = ' + intersected);
+
+          return t2 - t1;
+      };
+
+      var isPointInRange = function (n) {
+          var divs = document.getElementById('range').childNodes;
+          var range;
+          var inRange = [];
+
+          for (var i = 0; i < divs.length; i++) {
+              divs[i].appendChild(document.createElement('p'));
+          }
+
+          addRanges(divs);
+
+          var t1 = performance.now();
+          for (var i = 0; i < divs.length; i++) {
+              range = getRange(divs[i])
+              inRange.push(range.isPointInRange(divs[i].childNodes[0]));
+          }
+          var t2 = performance.now();
+
+          console.log('inRange = ' + inRange);
+
+          return t2 - t1;
+      };
+
+      var selectNode = function (n) {
+          var divs = document.getElementById('range').childNodes;
+          var range = window.getRange(divs[0]);
+
+          var t1 = performance.now();
+          for (var i = 0; i < divs.length; i++) {
+              range.selectNode(divs[i]);
+          }
+          var t2 = performance.now();
+
+          return t2 - t1;
+      };
+
+      var selectNodeContents = function (n) {
+          var range = window.get;
+          var divs = document.getElementById('range').childNodes;
+          var clones = [];
+          var clone;
+
+          var t1 = performance.now();
+          for (var i = 0; i < divs.length; i++) {
+              clone = range.cloneContents(divs[i]);
+              clones.push(clone);
+          }
+          var t2 = performance.now();
+
+          for (var i = 0; i < clones.length; i++) {
+              thirdContainer.appendChild(clones[i]);
+          }
+
+          return t2 - t1;
+      };
+
+      var setEnd = function (n) {
+          var range = window.get;
+          var divs = document.getElementById('range').childNodes;
+          var clones = [];
+          var clone;
+
+          var t1 = performance.now();
+          for (var i = 0; i < divs.length; i++) {
+              clone = range.cloneContents(divs[i]);
+              clones.push(clone);
+          }
+          var t2 = performance.now();
+
+          for (var i = 0; i < clones.length; i++) {
+              thirdContainer.appendChild(clones[i]);
+          }
+
+          return t2 - t1;
+      };
+
+      var setEndAfter = function (n) {
+          var range = window.get;
+          var divs = document.getElementById('range').childNodes;
+          var clones = [];
+          var clone;
+
+          var t1 = performance.now();
+          for (var i = 0; i < divs.length; i++) {
+              clone = range.cloneContents(divs[i]);
+              clones.push(clone);
+          }
+          var t2 = performance.now();
+
+          for (var i = 0; i < clones.length; i++) {
+              thirdContainer.appendChild(clones[i]);
+          }
+
+          return t2 - t1;
+      };
+
+      var setEndBefore = function (n) {
+          var range = window.get;
+          var divs = document.getElementById('range').childNodes;
+          var clones = [];
+          var clone;
+
+          var t1 = performance.now();
+          for (var i = 0; i < divs.length; i++) {
+              clone = range.cloneContents(divs[i]);
+              clones.push(clone);
+          }
+          var t2 = performance.now();
+
+          for (var i = 0; i < clones.length; i++) {
+              thirdContainer.appendChild(clones[i]);
+          }
+
+          return t2 - t1;
+      };
+
+      var setStart = function (n) {
+          var range = window.get;
+          var divs = document.getElementById('range').childNodes;
+          var clones = [];
+          var clone;
+
+          var t1 = performance.now();
+          for (var i = 0; i < divs.length; i++) {
+              clone = range.cloneContents(divs[i]);
+              clones.push(clone);
+          }
+          var t2 = performance.now();
+
+          for (var i = 0; i < clones.length; i++) {
+              thirdContainer.appendChild(clones[i]);
+          }
+
+          return t2 - t1;
+      };
+
+      var setStartAfter = function (n) {
           var range = window.get;
           var divs = document.getElementById('range').childNodes;
           var clones = [];
@@ -327,15 +675,15 @@
       };
 
 
-      var cloneRange = function (n) {
+      var setStartBefore = function (n) {
           var range = window.get;
           var divs = document.getElementById('range').childNodes;
-          var ranges = [];
+          var clones = [];
           var clone;
 
           var t1 = performance.now();
           for (var i = 0; i < divs.length; i++) {
-              clone = range.cloneRange(divs[i]);
+              clone = range.cloneContents(divs[i]);
               clones.push(clone);
           }
           var t2 = performance.now();
@@ -346,6 +694,32 @@
 
           return t2 - t1;
       };
+
+      var toString = function (n) {
+          var range = window.get;
+          var divs = document.getElementById('range').childNodes;
+          var clones = [];
+          var clone;
+
+          var t1 = performance.now();
+          for (var i = 0; i < divs.length; i++) {
+              clone = range.cloneContents(divs[i]);
+              clones.push(clone);
+          }
+          var t2 = performance.now();
+
+          for (var i = 0; i < clones.length; i++) {
+              thirdContainer.appendChild(clones[i]);
+          }
+
+          return t2 - t1;
+      };
+
+
+
+
+
+
 
 
 
@@ -373,9 +747,149 @@
           parentNodeInRange: true
         },
         {
+          task : 'Clone Range on 10000 children',
+          nChildren : 10000,
+          cb : cloneRange,
+          preAppend : true,
+          parentNodeInRange: true
+        },
+        {
           task : 'Clone Contents Range on 10000 children',
           nChildren : 10000,
           cb : cloneContents,
+          preAppend : true,
+          parentNodeInRange: true
+        },
+        {
+          task : 'Create Contextual Fragment Range on 10000 children',
+          nChildren : 10000,
+          cb : createContextualFragment,
+          preAppend : true,
+          parentNodeInRange: true
+        },
+        {
+          task : 'Clone Range on 10000 children',
+          nChildren : 10000,
+          cb : cloneRange,
+          preAppend : true,
+          parentNodeInRange: true
+        },
+        {
+          task : 'Delete Contents Range on 10000 children',
+          nChildren : 10000,
+          cb : deleteContents,
+          preAppend : true,
+          parentNodeInRange: true
+        },
+        {
+          task : 'Detach Range on 10000 children',
+          nChildren : 10000,
+          cb : detach,
+          preAppend : true,
+          parentNodeInRange: true
+        },
+        {
+          task : 'Extract Contents Range on 10000 children',
+          nChildren : 10000,
+          cb : extractContents,
+          preAppend : true,
+          parentNodeInRange: true
+        },
+        {
+          task : 'Get Bounding Client Rect Range on 10000 children',
+          nChildren : 10000,
+          cb : getBoundingClientRect,
+          preAppend : true,
+          parentNodeInRange: true
+        },
+        {
+          task : 'Get Client Rects Range on 10000 children',
+          nChildren : 10000,
+          cb : getClientRects,
+          preAppend : true,
+          parentNodeInRange: true
+        },
+        {
+          task : 'Insert Node on 10000 children',
+          nChildren : 10000,
+          cb : insertNode,
+          preAppend : true,
+          parentNodeInRange: true
+        },
+        {
+          task : 'Intersects Node on 10000 children',
+          nChildren : 10000,
+          cb : intersectsNode,
+          preAppend : true,
+          parentNodeInRange: true
+        },
+        {
+          task : 'Is Point In Range on 10000 children',
+          nChildren : 10000,
+          cb : isPointInRange,
+          preAppend : true,
+          parentNodeInRange: true
+        },
+        {
+          task : 'Select Node on 10000 children',
+          nChildren : 10000,
+          cb : selectNode,
+          preAppend : true,
+          parentNodeInRange: true
+        },
+        {
+          task : 'Select Node Contents on 10000 children',
+          nChildren : 10000,
+          cb : selectNodeContents,
+          preAppend : true,
+          parentNodeInRange: true
+        },
+        {
+          task : 'Set End on 10000 children',
+          nChildren : 10000,
+          cb : setEnd,
+          preAppend : true,
+          parentNodeInRange: true
+        },
+        {
+          task : 'Set End After on 10000 children',
+          nChildren : 10000,
+          cb : setEndAfter,
+          preAppend : true,
+          parentNodeInRange: true
+        },
+        {
+          task : 'Set End Before on 10000 children',
+          nChildren : 10000,
+          cb : setEndBefore,
+          preAppend : true,
+          parentNodeInRange: true
+        },
+        {
+          task : 'Set Start on 10000 children',
+          nChildren : 10000,
+          cb : setStart,
+          preAppend : true,
+          parentNodeInRange: true
+        },
+        {
+          task : 'Set Start After on 10000 children',
+          nChildren : 10000,
+          cb : setStartAfter,
+          preAppend : true,
+          parentNodeInRange: true
+        },
+        {
+          task : 'Set Start Before on 10000 children',
+          nChildren : 10000,
+          cb : setStartBefore,
+          preAppend : true,
+          parentNodeInRange: true
+        },
+        {
+          task : 'To String on 10000 children',
+          nChildren : 10000,
+          cb : toString,
           preAppend : true,
           parentNodeInRange: true
         }/*,
