@@ -444,12 +444,12 @@
       var insertNode = function (n) {
           var divs = document.getElementById('range').childNodes;
           var range = getRange();
-          range.setStart(divs[0]);
+          range.setStart(divs[0], 0);
           var node = document.createElement('p');
 
           var t1 = performance.now();
           for (var i = 0; i < divs.length; i++) {
-              range.setStart(divs[i]);
+              range.setStart(divs[i], 0);
               range.insertNode(node);
           }
           var t2 = performance.now();
@@ -620,17 +620,16 @@
 
 
       var DOM_API_BENCHMARKS = [
-
         {
-          task : 'Set Start Before Range on 10000 children',
-          nChildren : 10000,
+          task : 'Set Start Before Range on 100 children',
+          nChildren : 100,
           cb : setStartBeforeRange,
           preAppend : true,
           parentNodeInRange: true
         },
         {
-          task : 'Compare Point Range on 10000 children',
-          nChildren : 10000,
+          task : 'Compare Point Range on 100 children',
+          nChildren : 100,
           cb : comparePoint,
           preAppend : true,
           parentNodeInRange: true
@@ -664,15 +663,15 @@
           parentNodeInRange: true
         },
         {
-          task : 'Delete Contents Range on 10000 children',
-          nChildren : 10000,
+          task : 'Delete Contents Range on 100 children',
+          nChildren : 100,
           cb : deleteContents,
           preAppend : true,
           parentNodeInRange: true
         },
         {
-          task : 'Detach Range on 10000 children',
-          nChildren : 10000,
+          task : 'Detach Range on 100 children',
+          nChildren : 100,
           cb : detach,
           preAppend : true,
           parentNodeInRange: true
@@ -713,8 +712,8 @@
           parentNodeInRange: true
         },
         {
-          task : 'Is Point In Range on 10000 children',
-          nChildren : 10000,
+          task : 'Is Point In Range on 100 children',
+          nChildren : 100,
           cb : isPointInRange,
           preAppend : true,
           parentNodeInRange: true
@@ -734,43 +733,43 @@
           parentNodeInRange: true
         },
         {
-          task : 'Set End on 10000 children',
-          nChildren : 10000,
+          task : 'Set End on 1000 children',
+          nChildren : 1000,
           cb : setEnd,
           preAppend : true,
           parentNodeInRange: true
         },
         {
-          task : 'Set End After on 10000 children',
-          nChildren : 10000,
+          task : 'Set End After on 100 children',
+          nChildren : 100,
           cb : setEndAfter,
           preAppend : true,
           parentNodeInRange: true
         },
         {
-          task : 'Set End Before on 10000 children',
-          nChildren : 10000,
+          task : 'Set End Before on 100 children',
+          nChildren : 100,
           cb : setEndBefore,
           preAppend : true,
           parentNodeInRange: true
         },
         {
-          task : 'Set Start on 10000 children',
-          nChildren : 10000,
+          task : 'Set Start on 100 children',
+          nChildren : 100,
           cb : setStart,
           preAppend : true,
           parentNodeInRange: true
         },
         {
-          task : 'Set Start After on 10000 children',
-          nChildren : 10000,
+          task : 'Set Start After on 100 children',
+          nChildren : 100,
           cb : setStartAfter,
           preAppend : true,
           parentNodeInRange: true
         },
         {
-          task : 'To String on 10000 children',
-          nChildren : 10000,
+          task : 'To String on 100 children',
+          nChildren : 100,
           cb : toString,
           preAppend : true,
           parentNodeInRange: true
