@@ -252,8 +252,9 @@
 
 
       var setStartBeforeRange = function (n) {
-          var range = window.get;
           var divs = document.getElementById('range').childNodes;
+          var range = window.getRange();
+          range.setStart(divs[0], 0);
 
           var t1 = performance.now();
           for (var i = 0; i < divs.length; i++) {
@@ -264,25 +265,23 @@
       };
 
 
-      function getRange(node) {
+      function getRange() {
          return window.getSelection().getRangeAt(0) != null ?
-             window.getSelection().getRangeAt(0) :
-             window.getSelection().createRange().setStartBefore(node);
+                    window.getSelection().getRangeAt(0) :
+                    undefined;
       }
 
       var comparePoint = function (n) {
-          //var range = document.createRange();
           var divs = document.getElementById('range').childNodes;
           var parentDivs = parent.childNodes;
-          var range = getRange(divs[0]);
+          var range = getRange();
+          range.setStart(divs[0], 0);
 
           var value;
           var t1 = performance.now();
           for (var i = 0; i < divs.length - 1; i++) {
+              range.setStart(divs[i], 0);
               value = range.comparePoint(divs[i+1], 0);
-              console.log("value" + value);
-              value = range.comparePoint(parentDivs[i+1], 0);
-              console.log("value" + value)
           }
           var t2 = performance.now();
           return t2 - t1;
@@ -292,7 +291,8 @@
       var surroundContents = function (n) {
 
           var divs = document.getElementById('range').childNodes;
-          var range = window.getRange(divs[0]);
+          var range = getRange();
+          range.setStart(divs[0], 0);
 
           for (var i = 0; i < divs.length; i++) {
               divs[i].appendChild(document.createElement('p'));
@@ -300,26 +300,17 @@
 
           var t1 = performance.now();
           for (var i = 0; i < divs.length; i++) {
+              range.setStart(divs[i], 0);
               range.surroundContents(divs[i].children[0]);
           }
           var t2 = performance.now();
           return t2 - t1;
       };
 
-      function addRanges(divs) {
-
-          for (var i = 0; i < divs.length; i++) {
-              var r = new Range;
-              r.selectNode(divs[i]);
-          }
-
-      }
-
       var cloneContents = function (n) {
-          var range = window.getRange(divs[0]);
           var divs = document.getElementById('range').childNodes;
-          var clones = [];
-          var clone;
+          var range = getRange();
+          range.setStart(divs[0], 0);
 
           for (var i = 0; i < divs.length; i++) {
               divs[i].appendChild(document.createElement('p'));
@@ -327,74 +318,59 @@
 
           var t1 = performance.now();
           for (var i = 0; i < divs.length; i++) {
-              clone = range.cloneContents(divs[i]);
-              clones.push(clone);
+              range.setStart(divs[i], 0);
+              range.cloneContents(divs[i]);
           }
+
           var t2 = performance.now();
-
-          for (var i = 0; i < clones.length; i++) {
-              divs[i].appendChild(clones[i]);
-          }
-
           return t2 - t1;
       };
 
       var cloneRange = function (n) {
-          var range;
-          var divs = document.getElementById('range').childNodes;
-          var ranges = [];
-          var r;
 
-          addRanges(divs);
+          var divs = document.getElementById('range').childNodes;
+          var range = getRange();
+          range.setStart(divs[0], 0);
 
           var t1 = performance.now();
           for (var i = 0; i < divs.length; i++) {
-              range = getRange(divs[i])
-              r = range.cloneRange(divs[i]);
-              ranges.push(r);
+              range.setStart(divs[i], 0);
+             range.cloneRange(divs[i]);
           }
           var t2 = performance.now();
-
-          console.log('ranges = ' + ranges);
           return t2 - t1;
       };
 
 
       var createContextualFragment = function (n) {
           var divs = document.getElementById('range').childNodes;
-          var fragments = [];
-          var range;
+          var range = getRange();
+          range.setStart(divs[0], 0);
           var tagString = "<div>I am a Contextual Fragment</div>";
 
-          addRanges(divs);
 
           var t1 = performance.now();
           for (var i = 0; i < divs.length; i++) {
-              range = getRange(divs[i])
-              fragments.push(range.createContextualFragment(tagString));
+              range.setStart(divs[i], 0);
+              range.createContextualFragment(tagString);
           }
           var t2 = performance.now();
-
-          for (var i = 0; i < fragments.length; i++) {
-              divs[i].appendChild(fragments[i]);
-          }
-
           return t2 - t1;
       };
 
       var deleteContents = function (n) {
-          var range;
+
           var divs = document.getElementById('range').childNodes;
+          var range = getRange();
+          range.setStart(divs[0], 0);
 
           for (var i = 0; i < divs.length; i++) {
               divs[i].appendChild(document.createElement('p'));
           }
 
-          addRanges(divs);
-
           var t1 = performance.now();
           for (var i = 0; i < divs.length; i++) {
-              range = getRange(divs[i])
+              range.setStart(divs[i], 0);
               range.deleteContents();
           }
           var t2 = performance.now();
@@ -403,14 +379,15 @@
       };
 
       var detach = function (n) {
-          var range;
-          var divs = document.getElementById('range').childNodes;
 
-          addRanges(divs);
+          var divs = document.getElementById('range').childNodes;
+          var range = getRange();
+          range.setStart(divs[0], 0);
+
 
           var t1 = performance.now();
           for (var i = 0; i < divs.length; i++) {
-              range = getRange(divs[i])
+              range.setStart(divs[i], 0);
               range.detach();
           }
           var t2 = performance.now();
@@ -420,59 +397,45 @@
 
       var extractContents = function (n) {
           var divs = document.getElementById('range').childNodes;
-          var fragments = [];
-          var range;
-
-          addRanges(divs);
+          var range = getRange();
+          range.setStart(divs[0], 0);
 
           var t1 = performance.now();
           for (var i = 0; i < divs.length; i++) {
-              range = getRange(divs[i])
-              fragments.push(range.extractContents());
+              range.setStart(divs[i], 0);
+              range.extractContents();
           }
           var t2 = performance.now();
-
-          for (var i = 0; i < fragments.length; i++) {
-              divs[i].appendChild(fragments[i]);
-          }
 
           return t2 - t1;
       };
 
       var getClientRects = function (n) {
           var divs = document.getElementById('range').childNodes;
-          var clientRects = [];
-          var range;
-
-          addRanges(divs);
+          var range = getRange();
+          range.setStart(divs[0], 0);
 
           var t1 = performance.now();
           for (var i = 0; i < divs.length; i++) {
-              range = getRange(divs[i])
-              clientRects.push(range.getClientRects);
+              range.setStart(divs[i], 0);
+              range.getClientRects();
           }
           var t2 = performance.now();
-
-          console.log('clientRects = ' + clientRects);
 
           return t2 - t1;
       };
 
       var getBoundingClientRect = function (n) {
-          var range;
           var divs = document.getElementById('range').childNodes;
-          var boundingClientRects = [];
-
-          addRanges(divs);
+          var range = getRange();
+          range.setStart(divs[0], 0);
 
           var t1 = performance.now();
           for (var i = 0; i < divs.length; i++) {
-              range = getRange(divs[i])
-              boundingClientRects.push(range.getBoundingClientRect);
+              range.setStart(divs[i], 0);
+              range.getBoundingClientRect();
           }
           var t2 = performance.now();
-
-          console.log('boundingClientRects = ' + boundingClientRects);
 
           return t2 - t1;
       };
@@ -480,14 +443,13 @@
 
       var insertNode = function (n) {
           var divs = document.getElementById('range').childNodes;
-          var range;
+          var range = getRange();
+          range.setStart(divs[0]);
           var node = document.createElement('p');
-
-          addRanges(divs);
 
           var t1 = performance.now();
           for (var i = 0; i < divs.length; i++) {
-              range = getRange(divs[i])
+              range.setStart(divs[i]);
               range.insertNode(node);
           }
           var t2 = performance.now();
@@ -497,56 +459,51 @@
 
       var intersectsNode = function (n) {
           var divs = document.getElementById('range').childNodes;
-          var range;
-          var intersected = [];
+          var range = getRange();
+          range.setStart(divs[0], 0);
 
           for (var i = 0; i < divs.length; i++) {
               divs[i].appendChild(document.createElement('p'));
           }
 
-          addRanges(divs);
-
           var t1 = performance.now();
           for (var i = 0; i < divs.length; i++) {
-              range = getRange(divs[i])
-              intersected.push(range.intersectsNode(divs[i].childNodes[0]));
+              range.setStart(divs[i], 0);
+              range.intersectsNode(divs[i].childNodes[0]);
           }
-          var t2 = performance.now();
 
-          console.log('intersected = ' + intersected);
+          var t2 = performance.now();
 
           return t2 - t1;
       };
 
       var isPointInRange = function (n) {
           var divs = document.getElementById('range').childNodes;
-          var range;
-          var inRange = [];
+          var range = getRange();
+          range.setStart(divs[0], 0);
 
           for (var i = 0; i < divs.length; i++) {
               divs[i].appendChild(document.createElement('p'));
           }
 
-          addRanges(divs);
-
           var t1 = performance.now();
           for (var i = 0; i < divs.length; i++) {
-              range = getRange(divs[i])
-              inRange.push(range.isPointInRange(divs[i].childNodes[0]));
+              range.setStart(divs[i], 0);
+              range.isPointInRange(divs[i].childNodes[0], 0);
           }
           var t2 = performance.now();
-
-          console.log('inRange = ' + inRange);
 
           return t2 - t1;
       };
 
       var selectNode = function (n) {
           var divs = document.getElementById('range').childNodes;
-          var range = window.getRange(divs[0]);
+          var range = getRange();
+          range.setStart(divs[0], 0);
 
           var t1 = performance.now();
           for (var i = 0; i < divs.length; i++) {
+              range.setStart(divs[i], 0);
               range.selectNode(divs[i]);
           }
           var t2 = performance.now();
@@ -556,10 +513,12 @@
 
       var selectNodeContents = function (n) {
           var divs = document.getElementById('range').childNodes;
-          var range = window.getRange(divs[0]);
+          var range = getRange();
+          range.setStart(divs[0], 0);
 
           var t1 = performance.now();
           for (var i = 0; i < divs.length; i++) {
+              range.setStart(divs[i], 0);
               range.selectNodeContents(divs[i]);
           }
           var t2 = performance.now();
@@ -569,7 +528,8 @@
 
       var setEnd = function (n) {
           var divs = document.getElementById('range').childNodes;
-          var range = window.getRange(divs[0]);
+          var range = getRange();
+          range.setStart(divs[0], 0);
 
           var t1 = performance.now();
           for (var i = 0; i < divs.length; i++) {
@@ -582,7 +542,8 @@
 
       var setEndAfter = function (n) {
           var divs = document.getElementById('range').childNodes;
-          var range = window.getRange(divs[0]);
+          var range = getRange();
+          range.setStart(divs[0], 0);
 
           var t1 = performance.now();
           for (var i = 0; i < divs.length; i++) {
@@ -595,7 +556,8 @@
 
       var setEndBefore = function (n) {
           var divs = document.getElementById('range').childNodes;
-          var range = window.getRange(divs[0]);
+          var range = getRange();
+          range.setStart(divs[0], 0);
 
           var t1 = performance.now();
           for (var i = 0; i < divs.length; i++) {
@@ -608,7 +570,8 @@
 
       var setStart = function (n) {
           var divs = document.getElementById('range').childNodes;
-          var range = window.getRange(divs[0]);
+          var range = getRange();
+          range.setStart(divs[0], 0);
 
           var t1 = performance.now();
           for (var i = 0; i < divs.length; i++) {
@@ -621,7 +584,8 @@
 
       var setStartAfter = function (n) {
           var divs = document.getElementById('range').childNodes;
-          var range = window.getRange(divs[0]);
+          var range = getRange();
+          range.setStart(divs[0], 0);
 
           var t1 = performance.now();
           for (var i = 0; i < divs.length; i++) {
@@ -632,26 +596,14 @@
           return t2 - t1;
       };
 
-
-      var setStartBefore = function (n) {
-          var divs = document.getElementById('range').childNodes;
-          var range = window.getRange(divs[0]);
-
-          var t1 = performance.now();
-          for (var i = 0; i < divs.length; i++) {
-              range.setStartBefore(divs[i]);
-          }
-          var t2 = performance.now();
-
-          return t2 - t1;
-      };
-
       var toString = function (n) {
           var divs = document.getElementById('range').childNodes;
-          var range = window.getRange(divs[0]);
+          var range = getRange();
+          range.setStart(divs[0], 0);
 
           var t1 = performance.now();
           for (var i = 0; i < divs.length; i++) {
+              range.setStart(divs[i], 0);
               range.toString(divs[i]);
           }
           var t2 = performance.now();
@@ -708,13 +660,6 @@
           task : 'Create Contextual Fragment Range on 10000 children',
           nChildren : 10000,
           cb : createContextualFragment,
-          preAppend : true,
-          parentNodeInRange: true
-        },
-        {
-          task : 'Clone Range on 10000 children',
-          nChildren : 10000,
-          cb : cloneRange,
           preAppend : true,
           parentNodeInRange: true
         },
@@ -824,19 +769,12 @@
           parentNodeInRange: true
         },
         {
-          task : 'Set Start Before on 10000 children',
-          nChildren : 10000,
-          cb : setStartBefore,
-          preAppend : true,
-          parentNodeInRange: true
-        },
-        {
           task : 'To String on 10000 children',
           nChildren : 10000,
           cb : toString,
           preAppend : true,
           parentNodeInRange: true
-        },
+        }*//*,
         {
           task : 'Append 10000 children (appendChild)',
           nChildren : 10000,
