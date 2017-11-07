@@ -555,162 +555,106 @@
       };
 
       var selectNodeContents = function (n) {
-          var range = window.get;
           var divs = document.getElementById('range').childNodes;
-          var clones = [];
-          var clone;
+          var range = window.getRange(divs[0]);
 
           var t1 = performance.now();
           for (var i = 0; i < divs.length; i++) {
-              clone = range.cloneContents(divs[i]);
-              clones.push(clone);
+              range.selectNodeContents(divs[i]);
           }
           var t2 = performance.now();
-
-          for (var i = 0; i < clones.length; i++) {
-              thirdContainer.appendChild(clones[i]);
-          }
 
           return t2 - t1;
       };
 
       var setEnd = function (n) {
-          var range = window.get;
           var divs = document.getElementById('range').childNodes;
-          var clones = [];
-          var clone;
+          var range = window.getRange(divs[0]);
 
           var t1 = performance.now();
           for (var i = 0; i < divs.length; i++) {
-              clone = range.cloneContents(divs[i]);
-              clones.push(clone);
+              range.setEnd(divs[i], 0);
           }
           var t2 = performance.now();
-
-          for (var i = 0; i < clones.length; i++) {
-              thirdContainer.appendChild(clones[i]);
-          }
 
           return t2 - t1;
       };
 
       var setEndAfter = function (n) {
-          var range = window.get;
           var divs = document.getElementById('range').childNodes;
-          var clones = [];
-          var clone;
+          var range = window.getRange(divs[0]);
 
           var t1 = performance.now();
           for (var i = 0; i < divs.length; i++) {
-              clone = range.cloneContents(divs[i]);
-              clones.push(clone);
+              range.setEndAfter(divs[i]);
           }
           var t2 = performance.now();
-
-          for (var i = 0; i < clones.length; i++) {
-              thirdContainer.appendChild(clones[i]);
-          }
 
           return t2 - t1;
       };
 
       var setEndBefore = function (n) {
-          var range = window.get;
           var divs = document.getElementById('range').childNodes;
-          var clones = [];
-          var clone;
+          var range = window.getRange(divs[0]);
 
           var t1 = performance.now();
           for (var i = 0; i < divs.length; i++) {
-              clone = range.cloneContents(divs[i]);
-              clones.push(clone);
+              range.setEndBefore(divs[i]);
           }
           var t2 = performance.now();
-
-          for (var i = 0; i < clones.length; i++) {
-              thirdContainer.appendChild(clones[i]);
-          }
 
           return t2 - t1;
       };
 
       var setStart = function (n) {
-          var range = window.get;
           var divs = document.getElementById('range').childNodes;
-          var clones = [];
-          var clone;
+          var range = window.getRange(divs[0]);
 
           var t1 = performance.now();
           for (var i = 0; i < divs.length; i++) {
-              clone = range.cloneContents(divs[i]);
-              clones.push(clone);
+              range.setStart(divs[i], 0);
           }
           var t2 = performance.now();
-
-          for (var i = 0; i < clones.length; i++) {
-              thirdContainer.appendChild(clones[i]);
-          }
 
           return t2 - t1;
       };
 
       var setStartAfter = function (n) {
-          var range = window.get;
           var divs = document.getElementById('range').childNodes;
-          var clones = [];
-          var clone;
+          var range = window.getRange(divs[0]);
 
           var t1 = performance.now();
           for (var i = 0; i < divs.length; i++) {
-              clone = range.cloneContents(divs[i]);
-              clones.push(clone);
+              range.setStartAfter(divs[i]);
           }
           var t2 = performance.now();
-
-          for (var i = 0; i < clones.length; i++) {
-              thirdContainer.appendChild(clones[i]);
-          }
 
           return t2 - t1;
       };
 
 
       var setStartBefore = function (n) {
-          var range = window.get;
           var divs = document.getElementById('range').childNodes;
-          var clones = [];
-          var clone;
+          var range = window.getRange(divs[0]);
 
           var t1 = performance.now();
           for (var i = 0; i < divs.length; i++) {
-              clone = range.cloneContents(divs[i]);
-              clones.push(clone);
+              range.setStartBefore(divs[i]);
           }
           var t2 = performance.now();
-
-          for (var i = 0; i < clones.length; i++) {
-              thirdContainer.appendChild(clones[i]);
-          }
 
           return t2 - t1;
       };
 
       var toString = function (n) {
-          var range = window.get;
           var divs = document.getElementById('range').childNodes;
-          var clones = [];
-          var clone;
+          var range = window.getRange(divs[0]);
 
           var t1 = performance.now();
           for (var i = 0; i < divs.length; i++) {
-              clone = range.cloneContents(divs[i]);
-              clones.push(clone);
+              range.toString(divs[i]);
           }
           var t2 = performance.now();
-
-          for (var i = 0; i < clones.length; i++) {
-              thirdContainer.appendChild(clones[i]);
-          }
 
           return t2 - t1;
       };
@@ -892,7 +836,7 @@
           cb : toString,
           preAppend : true,
           parentNodeInRange: true
-        }/*,
+        },
         {
           task : 'Append 10000 children (appendChild)',
           nChildren : 10000,
@@ -1063,7 +1007,7 @@
           nChildren : 100000,
           cb : nodeListBackwards,
           preAppend : true
-        }*/
+        }
       ];
 
       // Create a basic UI to enable/disable benchmarks and set # of iterations
