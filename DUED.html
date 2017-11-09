@@ -612,14 +612,48 @@
       };
 
 
+      var appendSelectNodes = function (n) {
+
+          var select;
+          var t1 = performance.now();
+          for (var i = 0; i < n; i++) {
+              select = document.createElement('select');
+              select.style.display = "none";
+              container.appendChild(select);
+          }
+          var t2 = performance.now();
+          return t2 - t1;
+      };
 
 
+      var appendOptionNodes = function (n) {
 
+          var option;
+          var select = container.appendChild(document.createElement('select'));
 
+          var t1 = performance.now();
+          for (var i = 0; i < n; i++) {
+              option = document.createElement('option');
+              option.style.display = "none";
+              select.appendChild(option);
+          }
 
+          var t2 = performance.now();
+          return t2 - t1;
+      };
 
 
       var DOM_API_BENCHMARKS = [
+        {
+          task : 'Append 10000 select elements',
+          nChildren : 10000,
+          cb : appendSelectNodes,
+        },
+        {
+          task : 'Append 10000 option elements to select tag',
+          nChildren : 10000,
+          cb : appendOptionNodes,
+        },
         {
           task : 'Set Start Before Range on 100 children',
           nChildren : 100,
