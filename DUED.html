@@ -31,6 +31,10 @@
       secondContainer.appendChild(iframe);
       secondContainer.style.display = "none";
 
+      var thirdContainer = document.body.appendChild(document.createElement('div'));
+      thirdContainer.id = "range";
+      thirdContainer.style.display = "none";
+
       // Benchmarks
       var appendNChildren = function (n) {
         var t1 = performance.now();
@@ -298,7 +302,908 @@
       }
 
 
+      var setStartBeforeRange = function (n) {
+          var divs = document.getElementById('range').childNodes;
+          var range = window.getRange();
+          range.setStart(divs[0], 0);
+
+          var t1 = performance.now();
+          for (var i = 0; i < divs.length; i++) {
+              range.setStartBefore(divs[i]);
+          }
+          var t2 = performance.now();
+          return t2 - t1;
+      };
+
+
+      function getRange() {
+         return window.getSelection().getRangeAt(0) != null ?
+                    window.getSelection().getRangeAt(0) :
+                    undefined;
+      }
+
+      var comparePoint = function (n) {
+          var divs = document.getElementById('range').childNodes;
+          var parentDivs = parent.childNodes;
+          var range = getRange();
+          range.setStart(divs[0], 0);
+
+          var value;
+          var t1 = performance.now();
+          for (var i = 0; i < divs.length - 1; i++) {
+              range.setStart(divs[i], 0);
+              value = range.comparePoint(divs[i+1], 0);
+          }
+          var t2 = performance.now();
+          return t2 - t1;
+      };
+
+
+      var surroundContents = function (n) {
+
+          var divs = document.getElementById('range').childNodes;
+          var range = getRange();
+          range.setStart(divs[0], 0);
+
+          for (var i = 0; i < divs.length; i++) {
+              divs[i].appendChild(document.createElement('p'));
+          }
+
+          var t1 = performance.now();
+          for (var i = 0; i < divs.length; i++) {
+              range.setStart(divs[i], 0);
+              range.surroundContents(divs[i].children[0]);
+          }
+          var t2 = performance.now();
+          return t2 - t1;
+      };
+
+      var cloneContents = function (n) {
+          var divs = document.getElementById('range').childNodes;
+          var range = getRange();
+          range.setStart(divs[0], 0);
+
+          for (var i = 0; i < divs.length; i++) {
+              divs[i].appendChild(document.createElement('p'));
+          }
+
+          var t1 = performance.now();
+          for (var i = 0; i < divs.length; i++) {
+              range.setStart(divs[i], 0);
+              range.cloneContents(divs[i]);
+          }
+
+          var t2 = performance.now();
+          return t2 - t1;
+      };
+
+      var cloneRange = function (n) {
+
+          var divs = document.getElementById('range').childNodes;
+          var range = getRange();
+          range.setStart(divs[0], 0);
+
+          var t1 = performance.now();
+          for (var i = 0; i < divs.length; i++) {
+              range.setStart(divs[i], 0);
+             range.cloneRange(divs[i]);
+          }
+          var t2 = performance.now();
+          return t2 - t1;
+      };
+
+
+      var createContextualFragment = function (n) {
+          var divs = document.getElementById('range').childNodes;
+          var range = getRange();
+          range.setStart(divs[0], 0);
+          var tagString = "<div>I am a Contextual Fragment</div>";
+
+
+          var t1 = performance.now();
+          for (var i = 0; i < divs.length; i++) {
+              range.setStart(divs[i], 0);
+              range.createContextualFragment(tagString);
+          }
+          var t2 = performance.now();
+          return t2 - t1;
+      };
+
+      var deleteContents = function (n) {
+
+          var divs = document.getElementById('range').childNodes;
+          var range = getRange();
+          range.setStart(divs[0], 0);
+
+          for (var i = 0; i < divs.length; i++) {
+              divs[i].appendChild(document.createElement('p'));
+          }
+
+          var t1 = performance.now();
+          for (var i = 0; i < divs.length; i++) {
+              range.setStart(divs[i], 0);
+              range.deleteContents();
+          }
+          var t2 = performance.now();
+
+          return t2 - t1;
+      };
+
+      var detach = function (n) {
+
+          var divs = document.getElementById('range').childNodes;
+          var range = getRange();
+          range.setStart(divs[0], 0);
+
+
+          var t1 = performance.now();
+          for (var i = 0; i < divs.length; i++) {
+              range.setStart(divs[i], 0);
+              range.detach();
+          }
+          var t2 = performance.now();
+
+          return t2 - t1;
+      };
+
+      var extractContents = function (n) {
+          var divs = document.getElementById('range').childNodes;
+          var range = getRange();
+          range.setStart(divs[0], 0);
+
+          var t1 = performance.now();
+          for (var i = 0; i < divs.length; i++) {
+              range.setStart(divs[i], 0);
+              range.extractContents();
+          }
+          var t2 = performance.now();
+
+          return t2 - t1;
+      };
+
+      var getClientRects = function (n) {
+          var divs = document.getElementById('range').childNodes;
+          var range = getRange();
+          range.setStart(divs[0], 0);
+
+          var t1 = performance.now();
+          for (var i = 0; i < divs.length; i++) {
+              range.setStart(divs[i], 0);
+              range.getClientRects();
+          }
+          var t2 = performance.now();
+
+          return t2 - t1;
+      };
+
+      var getBoundingClientRect = function (n) {
+          var divs = document.getElementById('range').childNodes;
+          var range = getRange();
+          range.setStart(divs[0], 0);
+
+          var t1 = performance.now();
+          for (var i = 0; i < divs.length; i++) {
+              range.setStart(divs[i], 0);
+              range.getBoundingClientRect();
+          }
+          var t2 = performance.now();
+
+          return t2 - t1;
+      };
+
+
+      var insertNode = function (n) {
+          var divs = document.getElementById('range').childNodes;
+          var range = getRange();
+          range.setStart(divs[0], 0);
+          var node = document.createElement('p');
+
+          var t1 = performance.now();
+          for (var i = 0; i < divs.length; i++) {
+              range.setStart(divs[i], 0);
+              range.insertNode(node);
+          }
+          var t2 = performance.now();
+
+          return t2 - t1;
+      };
+
+      var intersectsNode = function (n) {
+          var divs = document.getElementById('range').childNodes;
+          var range = getRange();
+          range.setStart(divs[0], 0);
+
+          for (var i = 0; i < divs.length; i++) {
+              divs[i].appendChild(document.createElement('p'));
+          }
+
+          var t1 = performance.now();
+          for (var i = 0; i < divs.length; i++) {
+              range.setStart(divs[i], 0);
+              range.intersectsNode(divs[i].childNodes[0]);
+          }
+
+          var t2 = performance.now();
+
+          return t2 - t1;
+      };
+
+      var isPointInRange = function (n) {
+          var divs = document.getElementById('range').childNodes;
+          var range = getRange();
+          range.setStart(divs[0], 0);
+
+          for (var i = 0; i < divs.length; i++) {
+              divs[i].appendChild(document.createElement('p'));
+          }
+
+          var t1 = performance.now();
+          for (var i = 0; i < divs.length; i++) {
+              range.setStart(divs[i], 0);
+              range.isPointInRange(divs[i].childNodes[0], 0);
+          }
+          var t2 = performance.now();
+
+          return t2 - t1;
+      };
+
+      var selectNode = function (n) {
+          var divs = document.getElementById('range').childNodes;
+          var range = getRange();
+          range.setStart(divs[0], 0);
+
+          var t1 = performance.now();
+          for (var i = 0; i < divs.length; i++) {
+              range.setStart(divs[i], 0);
+              range.selectNode(divs[i]);
+          }
+          var t2 = performance.now();
+
+          return t2 - t1;
+      };
+
+      var selectNodeContents = function (n) {
+          var divs = document.getElementById('range').childNodes;
+          var range = getRange();
+          range.setStart(divs[0], 0);
+
+          var t1 = performance.now();
+          for (var i = 0; i < divs.length; i++) {
+              range.setStart(divs[i], 0);
+              range.selectNodeContents(divs[i]);
+          }
+          var t2 = performance.now();
+
+          return t2 - t1;
+      };
+
+      var setEnd = function (n) {
+          var divs = document.getElementById('range').childNodes;
+          var range = getRange();
+          range.setStart(divs[0], 0);
+
+          var t1 = performance.now();
+          for (var i = 0; i < divs.length; i++) {
+              range.setEnd(divs[i], 0);
+          }
+          var t2 = performance.now();
+
+          return t2 - t1;
+      };
+
+      var setEndAfter = function (n) {
+          var divs = document.getElementById('range').childNodes;
+          var range = getRange();
+          range.setStart(divs[0], 0);
+
+          var t1 = performance.now();
+          for (var i = 0; i < divs.length; i++) {
+              range.setEndAfter(divs[i]);
+          }
+          var t2 = performance.now();
+
+          return t2 - t1;
+      };
+
+      var setEndBefore = function (n) {
+          var divs = document.getElementById('range').childNodes;
+          var range = getRange();
+          range.setStart(divs[0], 0);
+
+          var t1 = performance.now();
+          for (var i = 0; i < divs.length; i++) {
+              range.setEndBefore(divs[i]);
+          }
+          var t2 = performance.now();
+
+          return t2 - t1;
+      };
+
+      var setStart = function (n) {
+          var divs = document.getElementById('range').childNodes;
+          var range = getRange();
+          range.setStart(divs[0], 0);
+
+          var t1 = performance.now();
+          for (var i = 0; i < divs.length; i++) {
+              range.setStart(divs[i], 0);
+          }
+          var t2 = performance.now();
+
+          return t2 - t1;
+      };
+
+      var setStartAfter = function (n) {
+          var divs = document.getElementById('range').childNodes;
+          var range = getRange();
+          range.setStart(divs[0], 0);
+
+          var t1 = performance.now();
+          for (var i = 0; i < divs.length; i++) {
+              range.setStartAfter(divs[i]);
+          }
+          var t2 = performance.now();
+
+          return t2 - t1;
+      };
+
+      var toString = function (n) {
+          var divs = document.getElementById('range').childNodes;
+          var range = getRange();
+          range.setStart(divs[0], 0);
+
+          var t1 = performance.now();
+          for (var i = 0; i < divs.length; i++) {
+              range.setStart(divs[i], 0);
+              range.toString(divs[i]);
+          }
+          var t2 = performance.now();
+
+          return t2 - t1;
+      };
+
+
+      var appendSelectNodesToDivs = function (n) {
+
+          var select = document.createElement('select');
+          select.appendChild(document.createElement('option'));
+          select.style.display = "none";
+          var t1 = performance.now();
+          for (var i = 0; i < n; i++) {
+              thirdContainer.childNodes[i].appendChild(select);
+          }
+          var t2 = performance.now();
+          return t2 - t1;
+      };
+
+
+      var insertBeforeSelectNChildren = function(n) {
+          var children = [];
+          var select = container.appendChild(document.createElement('select'));
+          for (var i = 0; i < n; i++) {
+              select.appendChild(document.createElement('option'));
+              children.push(select.lastChild);
+          }
+          var t1 = performance.now();
+          for (var i = 0; i < n; i++) {
+              select.insertBefore(document.createElement('option'), children[i]);
+          }
+          var t2 = performance.now();
+          return t2 - t1;
+      }
+
+      var insertBeforeOptionOptGroupNChildrenSelectTag = function(n) {
+          var children = [];
+          var sign = 1;
+          var select = container.appendChild(document.createElement('select'));
+
+          for (var i = 0; i < n; i++) {
+              if (sign < 0) {
+                  select.appendChild(document.createElement('optgroup'));
+              } else {
+                  select.appendChild(document.createElement('option'));
+              }
+              children.push(select.lastChild);
+          }
+
+          var t1 = performance.now();
+          for (var i = 0; i < n; i++) {
+              if (sign < 0) {
+                  select.insertBefore(document.createElement('optgroup'), children[i]);
+              } else {
+                  select.insertBefore(document.createElement('option'), children[i]);
+              }
+          }
+          var t2 = performance.now();
+          return t2 - t1;
+      }
+
+
+      var insertBeforeNChildrenChosenRandomly = function(n) {
+          var children = [];
+          var select = container.appendChild(document.createElement('select'));
+          for (var i = 0; i < n; i++) {
+              select.appendChild(document.createElement('option'));
+              children.push(select.lastChild);
+          }
+
+          // Shuffle list of indices
+          for (var i = 0; i < 100 * children.length; i++) {
+              var r = Math.floor(Math.random() * children.length);
+              var tmp = children[0];
+              children[0] = children[r];
+              children[r] = tmp;
+          }
+
+          var t1 = performance.now();
+          for (var i = 0; i < n; i++) {
+              select.insertBefore(document.createElement('optgroup'), children[i]);
+          }
+          var t2 = performance.now();
+          return t2 - t1;
+      }
+
+      var insertOptionOptGroupChildrenAlternatingBackFrontSelectTag = function(n) {
+          var children = [];
+          var sign = 1;
+          var select = container.appendChild(document.createElement('select'));
+
+          for (var i = 0; i < n; i++) {
+              if (sign < 0) {
+                  select.appendChild(document.createElement('optgroup'));
+              } else {
+                  select.appendChild(document.createElement('option'));
+              }
+              children.push(select.lastChild);
+          }
+
+          var t1 = performance.now();
+          for (var i = 0; i < n; i++) {
+              if (sign < 0) {
+                  select.insertBefore(document.createElement('option'), select.firstChild);
+                  sign = -sign;
+              } else {
+                  select.insertBefore(document.createElement('optgroup'), select.lastChild);
+                  sign = -sign;
+              }
+          }
+          var t2 = performance.now();
+          return t2 - t1;
+      };
+
+
+      var insertNChildrenAlternatingBackFrontSelectTag = function(n) {
+          var sign = 1;
+          var select = container.appendChild(document.createElement('select'));
+          for (var i = 0; i < n; i++) {
+              select.appendChild(document.createElement('option'));
+          }
+
+          var t1 = performance.now();
+          for (var i = 0; i < n; i++) {
+              if (sign < 0) {
+                  select.insertBefore(document.createElement('optgroup'), select.firstChild);
+                  sign = -sign;
+              } else {
+                  select.insertBefore(document.createElement('option'), select.lastChild);
+                  sign = -sign;
+              }
+          }
+          var t2 = performance.now();
+          return t2 - t1;
+      };
+
+      var insertBeforeSelectNChildrenChosenRandomly = function(n) {
+          var children = [];
+          var select = container.appendChild(document.createElement('select'));
+          for (var i = 0; i < n; i++) {
+              select.appendChild(document.createElement('optgroup'));
+              children.push(select.lastChild);
+          }
+
+          // Shuffle list of indices
+          for (var i = 0; i < 100 * children.length; i++) {
+              var r = Math.floor(Math.random() * children.length);
+              var tmp = children[0];
+              children[0] = children[r];
+              children[r] = tmp;
+          }
+
+          var t1 = performance.now();
+          for (var i = 0; i < n; i++) {
+              select.insertBefore(document.createElement('optgroup'), children[i]);
+          }
+          var t2 = performance.now();
+          return t2 - t1;
+      }
+
+      var removeNChildrenFrontSelectTag = function(n) {
+
+          var select = container.appendChild(document.createElement('select'));
+          for (var i = 0; i < n; i++) {
+              select.appendChild(document.createElement('option'));
+          }
+          var t1 = performance.now();
+          removeAllChildren(select);
+          var t2 = performance.now();
+          return t2 - t1;
+      };
+
+      var removeOptionOptGroupChildrenFrontSelectTag = function(n) {
+          var sign = 1;
+          var select = container.appendChild(document.createElement('select'));
+
+          for (var i = 0; i < n; i++) {
+              if (sign < 0) {
+                  select.appendChild(document.createElement('optgroup'));
+              } else {
+                  select.appendChild(document.createElement('option'));
+              }
+          }
+
+
+          var t1 = performance.now();
+          removeAllChildren(select);
+          var t2 = performance.now();
+          return t2 - t1;
+      };
+
+      var removeNChildrenBackSelectTag = function(n) {
+          var select = container.appendChild(document.createElement('select'));
+          for (var i = 0; i < n; i++) {
+              select.appendChild(document.createElement('option'));
+          }
+          var t1 = performance.now();
+          while (select.lastChild) {
+              select.removeChild(select.lastChild);
+          }
+          var t2 = performance.now();
+          return t2 - t1;
+      };
+
+      var removeOptionOptGroupChildrenBackSelectTag = function(n) {
+          var sign = 1;
+          var select = container.appendChild(document.createElement('select'));
+
+          for (var i = 0; i < n; i++) {
+              if (sign < 0) {
+                  select.appendChild(document.createElement('optgroup'));
+              } else {
+                  select.appendChild(document.createElement('option'));
+              }
+          }
+
+          var t1 = performance.now();
+          while (select.lastChild) {
+              select.removeChild(select.lastChild);
+          }
+          var t2 = performance.now();
+          return t2 - t1;
+      };
+
+      var removeNChildrenRandomSelectTag = function(n) {
+          var children = [];
+          var select = container.appendChild(document.createElement('select'));
+          for (var i = 0; i < n; i++) {
+              select.appendChild(document.createElement('option'));
+              children.push(select.lastChild);
+          }
+          // Shuffle list of indices
+          for (var i = 0; i < 100 * children.length; i++) {
+              var r = Math.floor(Math.random() * children.length);
+              var tmp = children[0];
+              children[0] = children[r];
+              children[r] = tmp;
+          }
+          var t1 = performance.now();
+          for (var i = 0; i < children.length; i++) {
+              select.removeChild(children[i]);
+          }
+          var t2 = performance.now();
+          return t2 - t1;
+      };
+
+      var removeNChildrenAlternatingBackFrontSelectTag = function(n) {
+          var select = container.appendChild(document.createElement('select'));
+          for (var i = 0; i < n; i++) {
+              select.appendChild(document.createElement('option'));
+          }
+
+          var sign = 1;
+          var t1 = performance.now();
+          for (var i = 0; i < n; i++) {
+              if (sign > 0) {
+                  select.removeChild(select.firstChild);
+                  sign = -sign;
+              } else {
+                  select.removeChild(select.lastChild);
+                  sign = -sign;
+              }
+          }
+
+          var t2 = performance.now();
+          return t2 - t1;
+      };
+
+
+
+
+      var appendOptionNodes = function (n) {
+
+          var option = document.createElement('option');
+          option.style.display = "none";;
+          var select = container.appendChild(document.createElement('select'));
+
+          var t1 = performance.now();
+          for (var i = 0; i < n; i++) {
+              select.appendChild(option);
+          }
+
+          var t2 = performance.now();
+          return t2 - t1;
+      };
+
+      var appendOptGroupNodes = function (n) {
+
+          var select = container.appendChild(document.createElement('select'));
+          var optgroup = document.createElement('optgroup');
+          optgroup.appendChild(document.createElement('option'));
+          optgroup.style.display = "none";
+
+          var t1 = performance.now();
+          for (var i = 0; i < n; i++) {
+              select.appendChild(optgroup);
+          }
+          var t2 = performance.now();
+          return t2 - t1;
+      };
+
+
       var DOM_API_BENCHMARKS = [
+        {
+          task : 'Append 10000 select elements to div nodes',
+          nChildren : 10000,
+          cb : appendSelectNodesToDivs,
+          preAppend : true,
+        },
+        {
+          task : 'InsertBefore select tag 10000 children (insertBefore(child, child[i]))',
+          nChildren : 10000,
+          cb : insertBeforeSelectNChildren,
+          preAppend : false
+        },
+        {
+          task : 'Alternate insertBefore(firstChild/lastChild) on select tag 10000 children ',
+          nChildren : 10000,
+          cb : insertOptionOptGroupChildrenAlternatingBackFrontSelectTag,
+          preAppend : false
+        },
+        {
+          task : 'InsertBefore select tag 10000 children (insertBefore(child, child[i])) -> (Option and OptGroup tags)',
+          nChildren : 10000,
+          cb : insertBeforeOptionOptGroupNChildrenSelectTag,
+          preAppend : false
+        },
+        {
+          task : 'InsertBefore select tag 10000 children before random child (insertBefore(child, child[random child]))',
+          nChildren : 10000,
+          cb : insertBeforeSelectNChildrenChosenRandomly,
+          preAppend : false,
+          parentNodeInRange: false
+        },
+        {
+          task : 'Alternate insertBefore(firstChild/lastChild) on select tag 10000 children.',
+          nChildren : 10000,
+          cb : insertNChildrenAlternatingBackFrontSelectTag,
+          preAppend : false,
+          parentNodeInRange: false
+        },
+        {
+          task : 'Append 10000 option elements to select tag',
+          nChildren : 10000,
+          cb : appendOptionNodes,
+          preAppend : false
+        },
+        {
+          task : 'Append 10000 optGroup elements to select tag',
+          nChildren : 10000,
+          cb : appendOptGroupNodes,
+          preAppend : false
+        },
+        {
+          task : 'Remove 10000 children from front (removeChild) on select tag -> (Option and OptGroup tags)',
+          nChildren : 10000,
+          cb : removeOptionOptGroupChildrenFrontSelectTag,
+          preAppend : false
+        },
+        {
+          task : 'Remove 10000 children from back (removeChild)  on select tag -> (Option and OptGroup tags)',
+          nChildren : 10000,
+          cb : removeOptionOptGroupChildrenBackSelectTag,
+          preAppend : false
+        },
+        {
+          task : 'Remove 10000 children from front (removeChild) on select tag',
+          nChildren : 10000,
+          cb : removeNChildrenFrontSelectTag,
+          preAppend : false
+        },
+        {
+          task : 'Remove 10000 children from back (removeChild)  on select tag',
+          nChildren : 10000,
+          cb : removeNChildrenBackSelectTag,
+          preAppend : false
+        },
+        {
+          task : 'Remove 10000 children randomly (removeChild)  on select tag',
+          nChildren : 10000,
+          cb : removeNChildrenRandomSelectTag,
+          preAppend : false
+        },
+        {
+          task : 'Remove 10000 children alternating back front (removeChild)  on select tag',
+          nChildren : 10000,
+          cb : removeNChildrenAlternatingBackFrontSelectTag,
+          preAppend : false
+        },
+
+        //Range tests
+        {
+          task : 'Set Start Before Range on 100 children',
+          nChildren : 100,
+          cb : setStartBeforeRange,
+          preAppend : true,
+          parentNodeInRange: true
+        },
+        {
+          task : 'Compare Point Range on 100 children',
+          nChildren : 100,
+          cb : comparePoint,
+          preAppend : true,
+          parentNodeInRange: true
+        },
+        {
+          task : 'Surround Contents Range on 1000 children',
+          nChildren : 1000,
+          cb : surroundContents,
+          preAppend : true,
+          parentNodeInRange: true
+        },
+        {
+          task : 'Clone Range on 100 children',
+          nChildren : 100,
+          cb : cloneRange,
+          preAppend : true,
+          parentNodeInRange: true
+        },
+        {
+          task : 'Clone Contents Range on 100 children',
+          nChildren : 100,
+          cb : cloneContents,
+          preAppend : true,
+          parentNodeInRange: true
+        },
+        {
+          task : 'Create Contextual Fragment Range on 1000 children',
+          nChildren : 1000,
+          cb : createContextualFragment,
+          preAppend : true,
+          parentNodeInRange: true
+        },
+        {
+          task : 'Delete Contents Range on 100 children',
+          nChildren : 100,
+          cb : deleteContents,
+          preAppend : true,
+          parentNodeInRange: true
+        },
+        {
+          task : 'Detach Range on 100 children',
+          nChildren : 100,
+          cb : detach,
+          preAppend : true,
+          parentNodeInRange: true
+        },
+        {
+          task : 'Extract Contents Range on 100 children',
+          nChildren : 100,
+          cb : extractContents,
+          preAppend : true,
+          parentNodeInRange: true
+        },
+        {
+          task : 'Get Bounding Client Rect Range on 100 children',
+          nChildren : 100,
+          cb : getBoundingClientRect,
+          preAppend : true,
+          parentNodeInRange: true
+        },
+        {
+          task : 'Get Client Rects Range on 100 children',
+          nChildren : 100,
+          cb : getClientRects,
+          preAppend : true,
+          parentNodeInRange: true
+        },
+        {
+          task : 'Insert Node on 100 children',
+          nChildren : 100,
+          cb : insertNode,
+          preAppend : true,
+          parentNodeInRange: true
+        },
+        {
+          task : 'Intersects Node on 100 children',
+          nChildren : 1000,
+          cb : intersectsNode,
+          preAppend : true,
+          parentNodeInRange: true
+        },
+        {
+          task : 'Is Point In Range on 100 children',
+          nChildren : 100,
+          cb : isPointInRange,
+          preAppend : true,
+          parentNodeInRange: true
+        },
+        {
+          task : 'Select Node on 1000 children',
+          nChildren : 1000,
+          cb : selectNode,
+          preAppend : true,
+          parentNodeInRange: true
+        },
+        {
+          task : 'Select Node Contents on 1000 children',
+          nChildren : 1000,
+          cb : selectNodeContents,
+          preAppend : true,
+          parentNodeInRange: true
+        },
+        {
+          task : 'Set End on 1000 children',
+          nChildren : 1000,
+          cb : setEnd,
+          preAppend : true,
+          parentNodeInRange: true
+        },
+        {
+          task : 'Set End After on 100 children',
+          nChildren : 100,
+          cb : setEndAfter,
+          preAppend : true,
+          parentNodeInRange: true
+        },
+        {
+          task : 'Set End Before on 100 children',
+          nChildren : 100,
+          cb : setEndBefore,
+          preAppend : true,
+          parentNodeInRange: true
+        },
+        {
+          task : 'Set Start on 100 children',
+          nChildren : 100,
+          cb : setStart,
+          preAppend : true,
+          parentNodeInRange: true
+        },
+        {
+          task : 'Set Start After on 100 children',
+          nChildren : 100,
+          cb : setStartAfter,
+          preAppend : true,
+          parentNodeInRange: true
+        },
+        {
+          task : 'To String on 100 children',
+          nChildren : 100,
+          cb : toString,
+          preAppend : true,
+          parentNodeInRange: true
+        },
+
+          //DOM tests
         {
           task : 'Append 10000 children (appendChild)',
           nChildren : 10000,
@@ -548,6 +1453,7 @@
 
           // Remove any children left from previous benchmarks.
           removeAllChildren(container);
+          removeAllChildren(thirdContainer);
           parent = container.appendChild(document.createElement('div'));
 
           if (bm.parentNodeInRange) {
@@ -560,6 +1466,7 @@
           if (bm.preAppend) {
             for (var j = 0; j < numChildren; j++) {
               parent.appendChild(document.createElement('div'));
+              thirdContainer.appendChild(document.createElement('div'));
             }
           }
 
