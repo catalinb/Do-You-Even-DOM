@@ -9,7 +9,7 @@
       <li> Use the iteration multiplier to increase the number of children used by each test. </li>
     </ul>
   	<p>
-  		Run each benchmark 
+  		Run each benchmark
   		<input id="iters_input" type="text" maxlength="6" size="6"/> times.
       Iteration multiplier
   		<input id="iter_mult_input" type="text" maxlength="6" size="6"/>.
@@ -185,6 +185,57 @@
         return t2 - t1;
       }
 
+      var nodeListRandom = function(n) {
+        var indices = [];
+        for (var i = 0; i < n; i++) {
+          indices[i] = i;
+        }
+        // Shuffle list of indices
+        for (var i = 0; i < 100 * indices.length; i++) {
+          var r = Math.floor(Math.random() * indices.length);
+          var tmp = indices[0];
+          indices[0] = indices[r];
+          indices[r] = tmp;
+        }
+
+        var nodeList = parent.childNodes;
+        var t1 = performance.now();
+        for (var i = 0; i < indices.length; i++) {
+          var child = nodeList[indices[i]];
+        }
+        var t2 = performance.now();
+        return t2 - t1;
+      }
+
+      var nodeListBackFront = function(n) {
+        var indices = [];
+        // Generate list [0, n-1, 1, n-2, 2, n-3, ...]
+        for (var i = 0; i < n; i++) {
+          indices[i] = i % 2 ? n - (i + 1) / 2 : i / 2;
+        }
+
+        var nodeList = parent.childNodes;
+        var t1 = performance.now();
+        for (var i = 0; i < indices.length; i++) {
+          var child = nodeList[indices[i]];
+        }
+        var t2 = performance.now();
+        return t2 - t1;
+      };
+
+      var lastNodeSizeN = function(n) {
+        var nodeList = parent.childNodes;
+        var totalTime = 0;
+        for (var i = 0; i < n; i++) {
+          parent.appendChild(document.createElement('div'));
+          var t1 = performance.now();
+          var child = nodeList[nodeList.length - 1];
+          var t2 = performance.now();
+          totalTime += t2 - t1;
+        }
+        return totalTime;
+      }
+
       var prependNChildren = function(n) {
         parent.appendChild(document.createElement('div'));
         var t1 = performance.now();
@@ -298,7 +349,7 @@
           parentNodeInRange: false
         },
         {
-            task : 'InsertBefore 10000 children before random child (insertBefore(child, child[random child]))',
+          task : 'InsertBefore 10000 children before random child (insertBefore(child, child[random child]))',
           nChildren : 10000,
           cb : insertBeforeNChildrenChosenRandomly,
           preAppend : false,
@@ -368,7 +419,7 @@
           parentNodeInRange: true
         },
         {
-            task : 'InsertBefore 10000 children before random child (insertBefore(child, child[random child])) - parent node inside selection range',
+          task : 'InsertBefore 10000 children before random child (insertBefore(child, child[random child])) - parent node inside selection range',
           nChildren : 10000,
           cb : insertBeforeNChildrenChosenRandomly,
           preAppend : false,
@@ -418,6 +469,24 @@
           nChildren : 100000,
           cb : nodeListBackwards,
           preAppend : true
+        },
+        {
+          task : 'Iterate randomly through 10000 child NodeList (childNodes[i])',
+          nChildren : 10000,
+          cb : nodeListRandom,
+          preAppend : true
+        },
+        {
+          task : 'Iterate back front through 10000 child NodeList (childNodes[i])',
+          nChildren : 10000,
+          cb : nodeListBackFront,
+          preAppend : true
+        },
+        {
+          task : 'Get the last child from 1 .. 10000 child NodeList',
+          nChildren : 10000,
+          cb : lastNodeSizeN,
+          preAppend : false
         }
       ];
 
