@@ -619,7 +619,7 @@
           select.style.display = "none";
           var t1 = performance.now();
           for (var i = 0; i < n; i++) {
-              container.childNodes[i].appendChild(select);
+              thirdContainer.childNodes[i].appendChild(select);
           }
           var t2 = performance.now();
           return t2 - t1;
@@ -741,6 +741,30 @@
           var t2 = performance.now();
           return t2 - t1;
       };
+
+      var insertBeforeSelectNChildrenChosenRandomly = function(n) {
+          var children = [];
+          var select = container.appendChild(document.createElement('select'));
+          for (var i = 0; i < n; i++) {
+              select.appendChild(document.createElement('optgroup'));
+              children.push(select.lastChild);
+          }
+
+          // Shuffle list of indices
+          for (var i = 0; i < 100 * children.length; i++) {
+              var r = Math.floor(Math.random() * children.length);
+              var tmp = children[0];
+              children[0] = children[r];
+              children[r] = tmp;
+          }
+
+          var t1 = performance.now();
+          for (var i = 0; i < n; i++) {
+              select.insertBefore(document.createElement('optgroup'), children[i]);
+          }
+          var t2 = performance.now();
+          return t2 - t1;
+      }
 
       var removeNChildrenFrontSelectTag = function(n) {
 
